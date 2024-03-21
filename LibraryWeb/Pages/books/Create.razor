@@ -1,0 +1,40 @@
+﻿@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+@page "/books/create"
+
+@code {
+	private Book NewBook = new Book();
+
+	string id = "";
+	private async Task HandleSubmit()
+	{
+		NewBook.AuthorId = Convert.ToInt64(id);
+		await BookService.CreateBookAsync(NewBook);
+		NavigationManager.NavigateTo("/books"); 
+	}
+}
+<h1>Create Book</h1>
+
+
+
+<EditForm Model="@NewBook" OnValidSubmit="@HandleSubmit">
+	<ValidationSummary />
+	<div class="form-group">
+		<label for="title">Title:</label>
+		<InputText id="title" @bind-Value="NewBook.Title" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="genre">Genre:</label>
+		<InputText id="genre" @bind-Value="NewBook.Genre" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="authorId">Author ID:</label>
+		<InputText id="authorId" @bind-Value="id" class="form-control" style="width: 300px;" />
+	</div>
+
+	<button type="submit" class="btn btn-primary">Create</button>
+</EditForm>

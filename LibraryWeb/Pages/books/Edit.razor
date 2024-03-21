@@ -1,0 +1,46 @@
+﻿@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+@page "/books/{id:long}/edit"
+
+<h1>Edit Book</h1>
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    private Book bookEdit = new Book(); 
+    string auId = "";
+    protected override async Task OnInitializedAsync()
+    {
+        bookEdit = await BookService.GetBookByIdAsync(Id);
+        auId = bookEdit.AuthorId.ToString();
+    }
+
+    private async Task HandleSubmit()
+    {
+        bookEdit.AuthorId = Convert.ToInt64(auId);
+        await BookService.UpdateBookAsync(bookEdit);
+        NavigationManager.NavigateTo("/books"); 
+    }
+}
+
+<EditForm Model="@bookEdit" OnValidSubmit="@HandleSubmit">
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <InputText id="title" @bind-Value="bookEdit.Title" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label for="genre">Genre:</label>
+        <InputText id="genre" @bind-Value="bookEdit.Genre" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="authorId">Author ID:</label>
+        <InputText id="authorId" @bind-Value="auId" class="form-control" style="width: 300px;" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+</EditForm>

@@ -1,7 +1,6 @@
 ﻿using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
 namespace LibraryConsoleApp
 {
@@ -14,8 +13,6 @@ namespace LibraryConsoleApp
 			var builder = new DbContextOptionsBuilder<LibraryDbContext>();
 			builder.UseMySql(connectionString, new MySqlServerVersion(new Version(10, 4, 32)));
 			return new LibraryDbContext(builder.Options);
-
-
 		}
 	}
 }

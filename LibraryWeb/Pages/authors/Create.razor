@@ -1,0 +1,42 @@
+﻿@inject AuthorService AuthorService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+@page "/authors/create"
+
+@code {
+    private Author NewAuthor = new Author();
+
+    private async Task HandleSubmit()
+    { 
+            try
+            {
+                await AuthorService.CreateAuthorAsync(NewAuthor);
+                NavigationManager.NavigateTo("/authors");
+            }
+            catch (Exception ex)
+            {
+
+            }
+        
+    }
+}
+
+<h1>Create Author</h1>
+
+<EditForm Model="@NewAuthor" OnValidSubmit="@HandleSubmit">
+    <ValidationSummary />    
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <InputText id="name" @bind-Value="NewAuthor.Name" class="form-control" />
+
+    </div>
+    <div class="form-group">
+        <label for="surname">Surname:</label>
+        <InputText id="surname" @bind-Value="NewAuthor.Surname" class="form-control" />
+
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>

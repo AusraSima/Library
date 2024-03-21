@@ -1,0 +1,44 @@
+﻿@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+@page "/books/{id:long}"
+
+@code {
+    [Parameter]
+    public long Id { get; set; }
+
+    private Book Book { get; set; } = new Book();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Book = await BookService.GetBookByIdAsync(Id);
+    }
+}
+
+<h1>Book Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Title:</strong> @Book.Title</p>
+    </div>
+    <div class="col-md-6">
+        <p><strong>Genre:</strong> @Book.Genre</p>
+    </div>
+    <div class="col-md-6">
+        <p><strong>Author:</strong> @Book.Author.Name @Book.Author.Surname </p>
+        
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo($"/books/{Book.Id}/edit", forceLoad: false))">Edit</a>
+        <a class="btn btn-danger" @onclick="@(() => NavigationManager.NavigateTo($"/books/{Book.Id}/delete", forceLoad: false))">Delete</a>
+    </div>
+</div>
+
+
+

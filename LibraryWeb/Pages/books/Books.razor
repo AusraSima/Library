@@ -1,0 +1,85 @@
+﻿@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+@page "/books"
+
+@code {
+	private List<Book> BookList { get; set; } = new();
+	protected override async Task OnInitializedAsync()
+	{
+		BookList = await BookService.GetBooksAsync();
+	}
+	private string NavigateToDelete(long bookId)
+	{
+		NavigationManager.NavigateTo($"/books/{bookId}/delete", forceLoad: false);
+		return "";
+	}
+}
+<PageTitle>Books menu</PageTitle>
+<h1>Welcome to Books</h1>
+
+<div class="nav-item px-3">
+	<NavLink class="nav-link custom-button" href="/books/create">
+		<span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Create new book
+	</NavLink>
+</div>
+<style>
+	.custom-button {
+		color: black; /* Change the text color to your desired color */
+		font-family: Arial, sans-serif; /* Change the font to your desired font */
+		font-size: 18px; /* Change the font size to your desired size */
+		background-color: white; /* Change the background color to your desired color */
+		padding: 10px 20px; /* Add padding for better appearance */
+		border-radius: 10px; /* Add border-radius for rounded corners */
+		border-style: solid;
+		border-color: blue;
+		text-decoration: none; /* Remove underline from link */
+		display: inline-block; /* Ensure block-level behavior */
+	}
+</style>
+
+
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Genre</th>
+			<th>Name</th>
+			<th>Surname</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var book in BookList)
+		{
+			<tr>
+				<td>@book.Title</td>
+				<td>@book.Genre</td>
+				<td>@book.Author.Name</td>
+				<td>@book.Author.Surname</td>
+				<td>
+					<a class="btn btn-success" @onclick="@(() => NavigationManager.NavigateTo($"/books/{@book.Id}", forceLoad: false))">Show</a>
+					<a class="btn btn-primary" @onclick="@(() =>NavigationManager.NavigateTo($"/books/{@book.Id}/edit", forceLoad: false))">Edit</a>
+					<a class="btn btn-danger" @onclick="@(() => NavigateToDelete(book.Id))"> Delete</a>
+
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<div class="modal" id="editAuthorModal-@@model.Id">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="deleteAuthorModal-@@model.Id">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		</div>
+	</div>
+</div>
